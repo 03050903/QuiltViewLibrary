@@ -33,7 +33,7 @@ public class QuiltViewPatch implements Comparable{
 			return new QuiltViewPatch(2,2);
 		else if((view_count % 4) == 0)
 			return new QuiltViewPatch(1,2);
-		else 
+		else
 			return new QuiltViewPatch(1,1);
 		
 	}

@@ -1,4 +1,7 @@
 package com.jake.quiltview;
+
+import android.widget.FrameLayout;
+
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -20,8 +23,9 @@ public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 
 	public QuiltViewBase quilt;
 	public ViewGroup scroll;
-	public int padding = 5;
+	public int padding;
 	public boolean isVertical = false;
+    public int baseWidth, baseHeight;
 	public ArrayList<View> views;
 	private Adapter adapter;
 	
@@ -44,6 +48,10 @@ public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 				isVertical = false;
 			}
 		}
+        padding = a.getInt(R.styleable.QuiltView_childPadding, 5);
+        baseWidth = a.getInt(R.styleable.QuiltView_baseWidth, 0);
+        baseHeight = a.getInt(R.styleable.QuiltView_baseHeight, 0);
+
 		setup();
 	}
 	
@@ -55,11 +63,23 @@ public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 		} else {
 			scroll = new HorizontalScrollView(this.getContext());
 		}
-		quilt = new QuiltViewBase(getContext(), isVertical);
+		quilt = new QuiltViewBase(getContext(), isVertical, baseWidth, baseHeight);
 		scroll.addView(quilt);
 		this.addView(scroll);
 		
 	}
+
+    public void setBaseWidth(int baseWidth) {
+        this.baseWidth = baseWidth;
+        quilt.baseWidth = baseWidth;
+        setup();
+    }
+
+    public void setBaseHeight(int baseHeight) {
+        this.baseHeight = baseHeight;
+        quilt.baseHeight = baseHeight;
+        setup();
+    }
 	
 	private DataSetObserver adapterObserver = new DataSetObserver(){
 		public void onChanged(){
@@ -93,27 +113,35 @@ public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 	public void addPatchImages(ArrayList<ImageView> images){
 		
 		for(ImageView image: images){
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-			image.setLayoutParams(params);
-			
-			LinearLayout wrapper = new LinearLayout(this.getContext());
-			wrapper.setPadding(padding, padding, padding, padding);
-			wrapper.addView(image);
-			quilt.addPatch(wrapper);
+            addPatchImage(image);
 		}
 	}
+
+    public void addPatchImage(ImageView image){
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        image.setLayoutParams(params);
+
+        LinearLayout wrapper = new LinearLayout(this.getContext());
+        wrapper.setPadding(padding, padding, padding, padding);
+        wrapper.addView(image);
+        addPatchView(wrapper);
+    }
 	
 	public void addPatchViews(ArrayList<View> views_a){
 		for(View view: views_a){
-			quilt.addPatch(view);
+            addPatchView(view);
 		}
 	}
 	
 	public void addPatchesOnLayout(){
 		for(View view: views){
-			quilt.addPatch(view);
+            addPatchView(view);
 		}
 	}
+
+    public void addPatchView(View view){
+        quilt.addPatch(view);
+    }
 	
 	public void removeQuilt(View view){
 		quilt.removeView(view);
