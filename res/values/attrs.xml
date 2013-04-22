@@ -3,6 +3,8 @@
     <declare-styleable name="QuiltView">
 		<attr name="scrollOrientation" format="string"/>
 		<attr name="childPadding" format="integer"/>
+        <attr name="baseWidth" format="integer"/>
+        <attr name="baseHeight" format="integer"/>
 	</declare-styleable>
     
 </resources>

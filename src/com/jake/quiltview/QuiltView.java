@@ -1,32 +1,23 @@
 package com.jake.quiltview;
-import java.util.ArrayList;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.*;
+import com.jake.quiltview.R.styleable;
+
+import java.util.ArrayList;
 
 
 public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 
 	public QuiltViewBase quilt;
 	public ViewGroup scroll;
-	public int padding = 5;
+	public int padding;
 	public boolean isVertical = false;
+    public int baseWidth, baseHeight;
 	public ArrayList<View> views;
 	
 	public QuiltView(Context context,boolean isVertical) {
@@ -48,6 +39,10 @@ public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 				isVertical = false;
 			}
 		}
+        padding = a.getInt(styleable.QuiltView_childPadding, 5);
+        baseWidth = a.getInt(R.styleable.QuiltView_baseWidth, 0);
+        baseHeight = a.getInt(R.styleable.QuiltView_baseHeight, 0);
+
 		setup();
 	}
 	
@@ -59,36 +54,56 @@ public class QuiltView extends FrameLayout implements OnGlobalLayoutListener {
 		} else {
 			scroll = new HorizontalScrollView(this.getContext());
 		}
-		quilt = new QuiltViewBase(getContext(), isVertical);
+		quilt = new QuiltViewBase(getContext(), isVertical, baseWidth, baseHeight);
 		scroll.addView(quilt);
 		this.addView(scroll);
 		
 	}
+
+    public void setBaseWidth(int baseWidth) {
+        this.baseWidth = baseWidth;
+        quilt.baseWidth = baseWidth;
+        setup();
+    }
+
+    public void setBaseHeight(int baseHeight) {
+        this.baseHeight = baseHeight;
+        quilt.baseHeight = baseHeight;
+        setup();
+    }
 	
 	public void addPatchImages(ArrayList<ImageView> images){
 		
 		for(ImageView image: images){
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-			image.setLayoutParams(params);
-			
-			LinearLayout wrapper = new LinearLayout(this.getContext());
-			wrapper.setPadding(padding, padding, padding, padding);
-			wrapper.addView(image);
-			quilt.addPatch(wrapper);
+            addPatchImage(image);
 		}
 	}
+
+    public void addPatchImage(ImageView image){
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        image.setLayoutParams(params);
+
+        LinearLayout wrapper = new LinearLayout(this.getContext());
+        wrapper.setPadding(padding, padding, padding, padding);
+        wrapper.addView(image);
+        addPatchView(wrapper);
+    }
 	
 	public void addPatchViews(ArrayList<View> views_a){
 		for(View view: views_a){
-			quilt.addPatch(view);
+            addPatchView(view);
 		}
 	}
 	
 	public void addPatchesOnLayout(){
 		for(View view: views){
-			quilt.addPatch(view);
+            addPatchView(view);
 		}
 	}
+
+    public void addPatchView(View view){
+        quilt.addPatch(view);
+    }
 	
 	public void removeQuilt(View view){
 		quilt.removeView(view);

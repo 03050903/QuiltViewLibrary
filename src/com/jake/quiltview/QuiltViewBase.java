@@ -1,15 +1,12 @@
 package com.jake.quiltview;
 
-import java.util.ArrayList;
-
 import android.content.Context;
-import android.support.v7.widget.GridLayout;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+
+import java.util.ArrayList;
 
 
 public class QuiltViewBase extends GridLayout {
@@ -20,11 +17,14 @@ public class QuiltViewBase extends GridLayout {
 	public int view_width = -1;
 	public int view_height = -1;
 	public boolean isVertical = true;
+    public int baseWidth, baseHeight;
 	public ArrayList<View> views;
 	
-	public QuiltViewBase(Context context, boolean isVertical) {
+	public QuiltViewBase(Context context, boolean isVertical, int baseWidth, int baseHeight) {
 		super(context);
 		this.isVertical = isVertical;
+        this.baseWidth = baseWidth;
+        this.baseHeight = baseHeight;
 		if(view_width == -1){
 			DisplayMetrics metrics = this.getResources().getDisplayMetrics();
 			int width = metrics.widthPixels;
@@ -47,8 +47,7 @@ public class QuiltViewBase extends GridLayout {
 	public void setupVertical(){
 		size = getBaseSizeVertical();
 		this.setColumnCount(columns);
-		this.setRowCount(-1);
-		this.setOrientation(this.HORIZONTAL);
+		this.setOrientation(HORIZONTAL);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
 		this.setLayoutParams(params);
 	}
@@ -56,8 +55,7 @@ public class QuiltViewBase extends GridLayout {
 	public void setupHorizontal(){
 		size = getBaseSizeHorizontal();
 		this.setRowCount(rows);
-		this.setColumnCount(-1);
-		this.setOrientation(this.VERTICAL);
+		this.setOrientation(VERTICAL);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
 		this.setLayoutParams(params);
 	}
@@ -126,6 +124,12 @@ public class QuiltViewBase extends GridLayout {
 	}
 	
 	public int getBaseWidth(){
+
+        if (baseWidth != 0) {
+            columns = view_width / baseWidth;
+            return baseWidth;
+        }
+
 		if(view_width < 500){
 			columns = 2;
 		} else if(view_width < 801){
@@ -141,6 +145,12 @@ public class QuiltViewBase extends GridLayout {
 	}
 	
 	public int getBaseHeight(){
+
+        if (baseHeight != 0) {
+            rows = view_height / baseHeight;
+            return baseHeight;
+        }
+
 		if(view_height < 350){
 			rows = 2;
 		} else if(view_height < 650){
