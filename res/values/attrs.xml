@@ -5,6 +5,7 @@
 		<attr name="childPadding" format="integer"/>
         <attr name="baseWidth" format="integer"/>
         <attr name="baseHeight" format="integer"/>
+        <attr name="scrollable" format="boolean"/>
 	</declare-styleable>
-    
+
 </resources>

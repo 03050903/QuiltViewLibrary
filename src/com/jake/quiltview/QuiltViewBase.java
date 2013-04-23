@@ -19,7 +19,7 @@ public class QuiltViewBase extends GridLayout {
 	public boolean isVertical = true;
     public int baseWidth, baseHeight;
 	public ArrayList<View> views;
-	
+
 	public QuiltViewBase(Context context, boolean isVertical, int baseWidth, int baseHeight) {
 		super(context);
 		this.isVertical = isVertical;
@@ -61,20 +61,27 @@ public class QuiltViewBase extends GridLayout {
 	}
 	
 	public void addPatch(View view){
-		
-		int count = this.getChildCount();
-		
-		QuiltViewPatch child = QuiltViewPatch.init(count, columns);
-		
-		GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-		params.width = size[0]*child.width_ratio;
-		params.height = size[1]*child.height_ratio;
-		params.rowSpec = GridLayout.spec(Integer.MIN_VALUE, child.height_ratio);
-		params.columnSpec = GridLayout.spec(Integer.MIN_VALUE, child.width_ratio);
-		view.setLayoutParams(params);
+		view.setLayoutParams(getNextViewParams());
 		addView(view);
 		views.add(view);
 	}
+
+    public GridLayout.LayoutParams getNextViewParams() {
+        QuiltViewPatch child = getNextPatch();
+
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = size[0]*child.width_ratio;
+        params.height = size[1]*child.height_ratio;
+        params.rowSpec = GridLayout.spec(Integer.MIN_VALUE, child.height_ratio);
+        params.columnSpec = GridLayout.spec(Integer.MIN_VALUE, child.width_ratio);
+
+        return params;
+    }
+
+    public QuiltViewPatch getNextPatch() {
+        int count = this.getChildCount();
+        return QuiltViewPatch.init(count, columns);
+    }
 	
 	public void refresh(){
 		this.removeAllViewsInLayout();
@@ -183,6 +190,5 @@ public class QuiltViewBase extends GridLayout {
             view_width = xNew;
             view_height = yNew;
     }
-	
 
 }
