@@ -2,6 +2,7 @@ package com.jake.quiltview;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -72,6 +73,7 @@ public class QuiltViewBase extends GridLayout {
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.width = size[0]*child.width_ratio;
         params.height = size[1]*child.height_ratio;
+        Log.e("TSC", "width: "+params.width+" height: "+params.height);
         params.rowSpec = GridLayout.spec(Integer.MIN_VALUE, child.height_ratio);
         params.columnSpec = GridLayout.spec(Integer.MIN_VALUE, child.width_ratio);
 
@@ -91,26 +93,13 @@ public class QuiltViewBase extends GridLayout {
 		}
 	}
 	
-	public int[] getBaseSize(){
-		int[] size = new int[2];
-		
-		float width_height_ratio = (3.0f/4.0f);
-		
-		int base_width = getBaseWidth();
-		int base_height = (int) (base_width*width_height_ratio);
-		
-		size[0] = base_width; // width
-		size[1] = base_height; // height
-		return size;
-	}
-	
 	public int[] getBaseSizeVertical(){
 		int[] size = new int[2];
 		
 		float width_height_ratio = (3.0f/4.0f);
 		
 		int base_width = getBaseWidth();
-		int base_height = (int) (base_width*width_height_ratio);
+		int base_height = getBaseHeight();
 		
 		size[0] = base_width; // width
 		size[1] = base_height; // height
@@ -121,9 +110,9 @@ public class QuiltViewBase extends GridLayout {
 		int[] size = new int[2];
 		
 		float width_height_ratio = (4.0f/3.0f);
-		
-		int base_height = getBaseHeight();
-		int base_width = (int) (base_height*width_height_ratio);
+
+		int base_width = getBaseWidth();
+        int base_height = getBaseHeight();
 		
 		size[0] = base_width; // width
 		size[1] = base_height; // height
