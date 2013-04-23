@@ -1,11 +1,11 @@
 package com.jake.quiltview;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.GridLayout;
 
 import java.util.ArrayList;
 
